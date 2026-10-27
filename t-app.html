@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="EDUSYS APP 강사용 메뉴별 사용 안내. 알림장, 완공, 내신분석 사용법을 웹으로 바로 확인하시기 바랍니다.">
+<meta property="og:title" content="에듀시스 앱 사용법 (강사용)">
+<meta property="og:description" content="알림장·채팅, 완공, 내신분석 강사용 사용 안내를 한 곳에서.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0d0d12">
+<title>에듀시스 앱 사용법 (강사용)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Montserrat:wght@600;700;800&display=swap">
+<style>
+/* Layout: same look as the student GUIDE app card — ink header, paper column, one app card whose three menu buttons open each web guide. */
+:root {
+  --ink: #0d0d12;
+  --paper: #f5f0e4;
+  --card: #ffffff;
+  --text: #16161c;
+  --muted: #62626f;
+  --line: #e7ddc6;
+  --crimson: #c4161c;
+  --crimson-deep: #8f0f14;
+  --crimson-soft: #fbe9ea;
+  --gold: #e9c46a;
+  --green: #4f9a58;
+  --font-display: "Noto Serif KR", "Apple SD Gothic Neo", serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-num: "Montserrat", "IBM Plex Sans KR", sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--paper); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.6; word-break: keep-all; -webkit-tap-highlight-color: transparent; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--ink); }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+p { margin: 0; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+:focus-visible { outline: 3px solid var(--crimson); outline-offset: 3px; border-radius: 10px; }
+.wrap { max-width: 560px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+/* HERO */
+.hero { position: relative; overflow: hidden; background: linear-gradient(165deg, #2a2110 0%, #14110b 38%, #0d0c0a 62%, #241b0c 100%); color: #f7f1e1; }
+.hero::before { content: ""; position: absolute; width: 520px; height: 520px; right: -260px; top: -240px; border-radius: 50%; background: radial-gradient(closest-side, rgba(233, 196, 106, .4), transparent 70%); pointer-events: none; }
+.hero .wrap { position: relative; z-index: 1; padding-block: 28px 30px; display: grid; gap: 18px; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand img { width: 38px; height: 38px; border-radius: 6px; background: #fff; padding: 2px; }
+.brand span { display: grid; line-height: 1.25; }
+.brand small { font-size: 11px; color: var(--gold); letter-spacing: .02em; }
+.brand b { font-size: 15px; font-weight: 700; }
+.since { display: flex; align-items: center; gap: 10px; font-family: var(--font-num); font-weight: 700; font-size: 12px; letter-spacing: .22em; color: var(--gold); }
+.since::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
+.hero h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(32px, 9vw, 46px); line-height: 1.15; letter-spacing: -.02em; }
+.hero h1 em { font-style: normal; display: block; font-family: var(--font-num); font-weight: 800; letter-spacing: .02em; font-size: .8em; background: linear-gradient(100deg, #fff4cc 0%, #f1d27a 30%, #c99a3a 58%, #f7e3a3 82%, #b8862c 100%); background-size: 200% 100%; animation: goldshine 6s ease-in-out infinite; -webkit-background-clip: text; background-clip: text; color: transparent; padding: .04em 0; }
+.hero .lead { font-size: 15px; color: #d6ccb4; }
+.envs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.envs div { display: grid; gap: 2px; padding: 12px; border-radius: 14px; border: 1px solid rgba(233, 196, 106, .28); background: rgba(233, 196, 106, .06); min-width: 0; }
+.envs span { font-size: 12px; color: var(--gold); font-weight: 700; }
+.envs b { font-size: 14px; color: #f4efe2; word-break: break-all; }
+@keyframes goldshine { 0%, 100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+
+main .wrap { display: grid; gap: 28px; padding-block: 30px 28px; }
+
+.card { position: relative; display: grid; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px; }
+.card-top { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; }
+.tile { width: 64px; height: 64px; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--line); }
+.tile img { width: 100%; height: 100%; object-fit: cover; }
+.meta { display: grid; gap: 2px; min-width: 0; }
+.meta .no { font-family: var(--font-num); font-weight: 800; font-size: 12px; letter-spacing: .14em; color: var(--crimson); }
+.meta h2 { font-size: 20px; font-weight: 700; line-height: 1.35; }
+.meta p { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+.lead2 { font-size: 15px; line-height: 1.6; }
+.lead2 b { color: var(--crimson); }
+.menu-label { display: inline-block; justify-self: start; font-weight: 700; font-size: 13px; color: #fff; background: var(--ink); padding: 5px 14px; border-radius: 999px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips span { font-size: 13px; padding: 5px 11px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); }
+.chips span.hot { background: var(--crimson-soft); border-color: #f2c4c6; color: var(--crimson-deep); font-weight: 700; }
+.phone-shot { justify-self: center; width: min(100%, 300px); padding: 7px; border-radius: 26px; background: var(--ink); box-shadow: 0 16px 36px rgba(13, 13, 18, .2); margin: 0; }
+.phone-shot img { border-radius: 20px; }
+.subs-title { font-weight: 700; font-size: 15px; }
+.subs { display: grid; gap: 8px; }
+.go { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 14px; background: var(--ink); color: #fff; transition: transform .15s ease; }
+.go:active { transform: scale(.985); }
+.go .num { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: .1em; }
+.go b { font-size: 16px; }
+.go small { display: block; font-size: 12px; color: #b9b7c2; font-weight: 400; }
+.go i { font-style: normal; font-family: var(--font-num); }
+.kind { display: inline-flex; justify-self: start; font-family: var(--font-num); font-weight: 700; font-size: 11px; letter-spacing: .12em; color: var(--muted); padding: 4px 10px; border-radius: 999px; background: var(--paper); }
+
+footer { background: var(--ink); color: #9d9ba8; }
+footer .wrap { padding-block: 28px calc(28px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 10px; justify-items: center; text-align: center; font-size: 13px; }
+footer img { width: 34px; height: 34px; border-radius: 6px; background: #fff; padding: 2px; }
+footer b { color: #f4f2ee; font-size: 14px; }
+
+.rise { animation: rise .7s cubic-bezier(.2, .8, .2, 1) both; }
+.d1 { animation-delay: .05s; } .d2 { animation-delay: .15s; } .d3 { animation-delay: .25s; } .d4 { animation-delay: .35s; }
+@keyframes rise { from { opacity: .3; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .rise, .hero h1 em { animation: none; } }
+@media (max-width: 360px) { .envs { grid-template-columns: 1fr; } }
+</style>
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); background: #0d0d12; }</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="brand rise d1"><img src="t-app-logo.png" alt="" width="145" height="140"><span><small>기본과 디테일에 강한</small><b>정이조 영어학원</b></span></div>
+    <p class="since rise d1">EDUSYS APP · TEACHER GUIDE</p>
+    <h1 class="rise d2">에듀시스 앱 사용법<em>강사용</em></h1>
+    <p class="lead rise d3">선생님이 자주 쓰는 앱 메뉴의 사용 방법을 모았습니다. 메뉴 이름을 누르면 단계별 웹 가이드가 열립니다.</p>
+    <div class="envs rise d4">
+      <div><span>노트북 · PC</span><b>크롬에서 edutest.kr/teacher</b></div>
+      <div><span>핸드폰</span><b>EDUSYS 앱 다운로드 후 로그인</b></div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <article class="card">
+      <div class="card-top">
+        <div class="tile"><img src="t-app-icon-edusys.png" alt="" width="300" height="303"></div>
+        <div class="meta"><span class="no">EDUSYS APP</span><h2>에듀시스 앱 사용법</h2><p>메뉴별 사용 안내 · 강사용</p></div>
+      </div>
+      <p class="lead2"><b>EDUSYS APP</b>은 학생과의 긴밀한 소통과 효율적인 학습 관리로, 선생님의 지도 효과를 극대화합니다.</p>
+      <span class="menu-label">APP 메뉴</span>
+      <div class="chips">
+        <span class="hot">알림장</span><span>성적</span><span>푸쉬메시지</span><span class="hot">완공</span><span class="hot">내신분석</span>
+      </div>
+      <figure class="phone-shot"><img src="t-app-app-home.png" alt="edusys 앱 강사 홈 화면 메뉴" width="480" height="557"></figure>
+      <p class="subs-title">앱 메뉴 사용 안내</p>
+      <div class="subs">
+        <a class="go" href="t-notice.html"><span class="num">A</span><span><b>알림장 · 채팅</b><small>반·학생에게 알림장 보내기, 수정·삭제, 채팅</small></span><i aria-hidden="true">→</i></a>
+        <a class="go" href="t-wangong.html"><span class="num">B</span><span><b>완공</b><small>담임반 OPEN, 학습현황 확인, 통계·랭킹·더공</small></span><i aria-hidden="true">→</i></a>
+        <a class="go" href="t-naesin.html"><span class="num">C</span><span><b>내신분석</b><small>점수·성적분석·기출분석 확인과 학부모 발송</small></span><i aria-hidden="true">→</i></a>
+      </div>
+      <span class="kind">WEB GUIDE</span>
+    </article>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <img src="t-app-logo.png" alt="" width="145" height="140">
+    <b>정이조 영어학원</b>
+    <p>궁금한 점은 학원 상담실로 문의해 주시기 바랍니다.</p>
+  </div>
+</footer>
+
+</body>
+</html>

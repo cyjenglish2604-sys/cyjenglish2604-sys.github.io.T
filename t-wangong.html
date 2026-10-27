@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="강사 사이트에서 완공 반을 열고, 학생 진행 상황과 통계·랭킹·더공을 확인하는 방법을 안내합니다.">
+<meta property="og:title" content="완공 강사용 사용 안내">
+<meta property="og:description" content="담임반 OPEN부터 학습현황 확인, 학부모 리포트 발송까지 6단계로 안내합니다.">
+<meta property="og:type" content="website">
+<title>완공 강사용 사용 안내</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one phone-width column; clean app screens in a device frame with web-native hotspots on top */
+:root {
+  --bg: #f6f3fa;
+  --surface: #ffffff;
+  --fg: #221a2e;
+  --muted: #6b6178;
+  --line: #e4dcee;
+  --accent: #7a2fb3;        /* 완공 CLASS 보라 */
+  --accent-soft: #efe4f8;
+  --hl: #f2542d;            /* 화면 위 표시(핫스팟) */
+  --hl-fg: #ffffff;
+  --mark: #ffe066;
+  --mark-fg: #2b2100;
+  --warn: #d6262f;
+  --warn-soft: #fde8e9;
+  --good: #1f8a52;
+  --good-soft: #e3f4ea;
+  --coin: #e8a300;
+  --device: #18131f;
+  --chip: #1d1426;
+  --chip-fg: #ffffff;
+  --scrim: rgba(18, 10, 28, .48);
+  --font-display: "Do Hyeon", "IBM Plex Sans KR", sans-serif;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17121e; --surface: #221b2c; --fg: #f1ecf7; --muted: #a99db8; --line: #3a3048;
+    --accent: #c08cf0; --accent-soft: #33244a; --hl: #ff6a45; --mark: #ffd84d; --mark-fg: #2b2100;
+    --warn: #ff6b72; --warn-soft: #3d1c20; --good: #5fd18f; --good-soft: #17342a; --coin: #ffc233;
+    --device: #000000;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17121e; --surface: #221b2c; --fg: #f1ecf7; --muted: #a99db8; --line: #3a3048;
+  --accent: #c08cf0; --accent-soft: #33244a; --hl: #ff6a45; --mark: #ffd84d; --mark-fg: #2b2100;
+  --warn: #ff6b72; --warn-soft: #3d1c20; --good: #5fd18f; --good-soft: #17342a; --coin: #ffc233;
+  --device: #000000;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  word-break: keep-all;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.wrap {
+  max-width: 560px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.25; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+/* Header */
+.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+.top .wrap { padding-block: 28px 22px; display: grid; gap: 10px; }
+.crumb { font-size: 13px; color: var(--muted); letter-spacing: .02em; }
+.crumb b { color: var(--accent); font-weight: 700; }
+h1 { font-size: 34px; }
+.lead { color: var(--muted); font-size: 15px; }
+
+/* Sticky section nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
+.nav .wrap { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.nav .wrap::-webkit-scrollbar { display: none; }
+.nav a {
+  flex: none; text-decoration: none; color: var(--fg); font-size: 14px; font-weight: 500;
+  padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg);
+}
+.nav a.on { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+
+main .wrap { display: grid; gap: 40px; padding-block: 28px 56px; }
+section { display: grid; gap: 16px; scroll-margin-top: 70px; }
+.eyebrow { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: .06em; }
+h2 { font-size: 27px; }
+.sub { color: var(--muted); font-size: 15px; }
+
+/* Number badge shared by the strip, step cards and hotspots */
+.n {
+  display: inline-grid; place-items: center; flex: none;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--hl); color: var(--hl-fg);
+  font: 700 13px/1 var(--font-body); font-variant-numeric: tabular-nums;
+}
+
+/* Daily strip */
+.strip { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.strip a {
+  display: grid; gap: 6px; text-decoration: none; color: var(--fg);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px;
+  min-height: 84px; align-content: start;
+}
+.strip .n { width: 24px; height: 24px; font-size: 12px; }
+.strip span:last-child { font-size: 14px; font-weight: 500; line-height: 1.35; }
+.strip li:last-child a { border-color: var(--warn); background: var(--warn-soft); }
+
+/* Video placeholder */
+.video {
+  border: 2px dashed var(--line); border-radius: 14px; background: var(--surface);
+  aspect-ratio: 9 / 10; max-width: 100%; display: grid; place-items: center; text-align: center; padding: 20px;
+}
+.video .play { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; margin: 0 auto 12px; }
+.video .play::after { content: ""; border-left: 20px solid var(--surface); border-top: 12px solid transparent; border-bottom: 12px solid transparent; margin-left: 5px; }
+.video strong { display: block; font-size: 17px; }
+.video small { color: var(--muted); font-size: 13px; }
+
+/* Step cards */
+.steps { display: grid; gap: 14px; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; scroll-margin-top: 70px; }
+.step-head { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 16px 16px 14px; }
+.step-head .n { width: 32px; height: 32px; font-size: 15px; }
+.step-head h3 { font-size: 21px; }
+.step-head p { color: var(--muted); font-size: 15px; margin-top: 2px; }
+.key { background: var(--accent-soft); color: var(--accent); padding: 0 6px; border-radius: 5px; font-weight: 700; }
+
+/* Device frame + screen */
+.shot { margin: 0; background: var(--bg); padding: 22px 16px 20px; display: grid; justify-items: center; gap: 12px; }
+.phone {
+  width: min(100%, 290px); padding: 7px; border-radius: 30px; background: var(--device);
+  box-shadow: 0 1px 0 var(--line), 0 14px 34px rgba(40, 14, 70, .18);
+  border: 0; cursor: zoom-in; display: block; font: inherit; color: inherit;
+}
+.phone.wide { width: min(100%, 330px); }
+.screen { position: relative; overflow: hidden; border-radius: 23px; background: #fff; }
+.screen img { width: 100%; height: auto; }
+.shot figcaption { font-size: 13px; color: var(--muted); text-align: center; }
+.shot figcaption .btn { display: inline-block; background: #e7473c; color: #fff; font-weight: 700; padding: 1px 10px; border-radius: 6px; font-size: 12px; margin: 0 2px; }
+
+/* Hotspot: ring around the target, optional scrim around it, number badge, label chip */
+.spot {
+  position: absolute;
+  left: calc(var(--x) * 1%); top: calc(var(--y) * 1%);
+  width: calc(var(--w) * 1%); height: calc(var(--h) * 1%);
+  border-radius: var(--r, 10px);
+  box-shadow: 0 0 0 2.5px var(--hl), 0 0 0 6px color-mix(in srgb, var(--hl) 28%, transparent);
+  pointer-events: none;
+}
+.spot.dim { box-shadow: 0 0 0 2.5px var(--hl), 0 0 0 6px color-mix(in srgb, var(--hl) 28%, transparent), 0 0 0 200vmax var(--scrim); }
+.spot.ghost { box-shadow: 0 0 0 2px var(--chip-fg); border: 0; opacity: .9; }
+.spot::after {
+  content: ""; position: absolute; inset: -2px; border-radius: inherit;
+  border: 2px solid var(--hl); animation: ping 1.8s ease-out infinite;
+}
+.spot.ghost::after { display: none; }
+@keyframes ping { 0% { opacity: .9; transform: scale(1); } 80%, 100% { opacity: 0; transform: scale(1.35); } }
+.spot > .n {
+  position: absolute; left: -9px; top: -9px; width: 20px; height: 20px; font-size: 11px;
+  box-shadow: 0 0 0 2px #fff;
+}
+.spot.in > .n { left: 6px; top: 6px; }
+.tip {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  top: calc(100% + 12px);
+  background: var(--chip); color: var(--chip-fg);
+  font: 700 12px/1 var(--font-body); letter-spacing: -.01em;
+  padding: 7px 10px; border-radius: 8px; white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
+}
+.tip::before {
+  content: ""; position: absolute; left: 50%; top: -5px; margin-left: -5px;
+  border: 5px solid transparent; border-top: 0; border-bottom-color: var(--chip);
+}
+.tip.up { top: auto; bottom: calc(100% + 12px); }
+.tip.up::before { top: auto; bottom: -5px; border-bottom: 0; border-top: 5px solid var(--chip); }
+.tip.end { left: auto; right: -4px; transform: none; }
+.tip.end::before { left: auto; right: 16px; margin-left: 0; }
+.tip.soft { background: var(--chip-fg); color: var(--chip); }
+.tip.soft::before { border-bottom-color: var(--chip-fg); }
+
+/* Numbered legend under a multi-hotspot screen */
+.legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; width: 100%; }
+.legend li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; font-size: 15px; }
+.legend .n { width: 22px; height: 22px; font-size: 12px; margin-top: 2px; }
+.legend b { font-weight: 700; }
+
+.alarm {
+  background: var(--warn-soft); border: 2px solid var(--warn); border-radius: 14px; padding: 14px 16px;
+  display: grid; gap: 4px;
+}
+.alarm strong { color: var(--warn); font-size: 18px; font-family: var(--font-display); font-weight: 400; }
+.alarm p { font-size: 15px; }
+
+/* Record guide */
+.fields { display: grid; gap: 10px; }
+.field { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 8px; }
+.field h3 { font-size: 19px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.field h3 .n { width: 24px; height: 24px; font-size: 12px; background: var(--accent); }
+.field h3 small { font-family: var(--font-body); font-size: 12px; color: var(--accent); background: var(--accent-soft); padding: 1px 8px; border-radius: 999px; }
+.field p { font-size: 15px; }
+.ex { display: grid; gap: 6px; }
+.ex div { font-size: 14px; border-radius: 10px; padding: 8px 10px; display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; min-width: 0; }
+.ex .ok { background: var(--good-soft); }
+.ex .no { background: var(--warn-soft); }
+.ex b { font-size: 12px; padding: 1px 7px; border-radius: 999px; color: #fff; white-space: nowrap; margin-top: 2px; }
+.ex .ok b { background: var(--good); }
+.ex .no b { background: var(--warn); }
+.quote { background: var(--mark); color: var(--mark-fg); border-radius: 14px; padding: 16px; font-size: 15px; display: grid; gap: 6px; }
+.quote strong { font-family: var(--font-display); font-weight: 400; font-size: 19px; }
+
+/* Folded sections */
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+summary {
+  list-style: none; cursor: pointer; padding: 16px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+}
+summary::-webkit-details-marker { display: none; }
+summary h3 { font-size: 21px; }
+summary p { color: var(--muted); font-size: 14px; }
+summary::after {
+  content: ""; width: 10px; height: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg); margin: 0 6px 4px 0; transition: transform .2s;
+}
+details[open] summary::after { transform: rotate(-135deg); margin-bottom: -4px; }
+.body { padding: 0 16px 18px; display: grid; gap: 14px; }
+.body > p { font-size: 15px; }
+.body .shot { border-radius: 14px; }
+.facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.fact { background: var(--bg); border-radius: 12px; padding: 12px; display: grid; gap: 2px; }
+.fact span { font-size: 13px; color: var(--muted); }
+.fact strong { font-size: 17px; }
+.coin { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--coin); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--coin) 60%, #fff); vertical-align: -2px; margin-left: 2px; }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { background: var(--accent); color: var(--surface); font-weight: 500; font-size: 13px; }
+tr:last-child td { border-bottom: 0; }
+td small { color: var(--muted); }
+.note { font-size: 13px; color: var(--muted); }
+.tabs { display: flex; gap: 6px; }
+.tabs button {
+  font: inherit; font-size: 14px; font-weight: 500; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg);
+}
+.tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.pane { display: grid; gap: 12px; }
+
+/* FAQ */
+.faq { display: grid; gap: 8px; }
+.faq details { border-radius: 12px; }
+.faq summary { padding: 14px 16px; font-weight: 500; font-size: 15px; }
+.faq .body p { font-size: 15px; }
+.faq summary::before { content: "Q"; font-family: var(--font-display); color: var(--accent); font-size: 18px; margin-right: 2px; }
+.faq summary { grid-template-columns: auto 1fr auto; }
+.faq .body p::before { content: "A. "; font-weight: 700; color: var(--accent); }
+
+/* 30초 따라보기 플레이어 */
+.player { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 16px 14px; display: grid; gap: 14px; justify-items: center; }
+.player-head { width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.player-head strong { font-family: var(--font-display); font-weight: 400; font-size: 19px; }
+.player-head span { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bars { width: min(100%, 300px); display: flex; gap: 4px; }
+.bars button { flex: 1; height: 16px; padding: 6px 0; border: 0; background: none; cursor: pointer; }
+.bars button span { display: block; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.bars button i { display: block; height: 100%; width: 0; background: var(--hl); }
+.pstage { position: relative; width: min(100%, 260px); }
+.pstage .phone { width: 100%; cursor: default; }
+.pscreen { aspect-ratio: 9 / 16; }
+.slide { position: absolute; inset: 0; opacity: 0; transition: opacity .45s ease; background: var(--slide-bg, #f3f4f6); }
+.slide.on { opacity: 1; }
+.layer { position: relative; width: 100%; }
+.layer img { width: 100%; height: auto; display: block; }
+.slide .spot, .slide .banner { opacity: 0; transition: opacity .35s ease; }
+.slide.cue .spot, .slide.cue .banner { opacity: 1; }
+.tap {
+  position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
+  background: rgba(255, 255, 255, .85); box-shadow: 0 0 0 2px var(--hl); opacity: 0; pointer-events: none;
+}
+.slide.tapped .tap { animation: tap .7s ease-out 1; }
+@keyframes tap { 0% { opacity: 0; transform: scale(1.6); } 35% { opacity: 1; transform: scale(.8); } 100% { opacity: 0; transform: scale(1.9); } }
+.banner {
+  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
+  background: var(--chip); color: var(--chip-fg); border-radius: 10px; padding: 9px 12px;
+  font: 700 12px/1.3 var(--font-body); white-space: nowrap; box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
+}
+.banner .btn { display: inline-block; background: #e7473c; color: #fff; padding: 1px 8px; border-radius: 5px; margin: 0 2px; }
+.pbig {
+  position: absolute; left: 50%; top: 80%; width: 68px; height: 68px; margin: -34px 0 0 -34px;
+  border-radius: 50%; border: 0; cursor: pointer; background: var(--accent);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 25%, transparent), 0 10px 26px rgba(0, 0, 0, .3);
+  display: grid; place-items: center;
+}
+.pbig::after { content: ""; border-left: 22px solid #fff; border-top: 13px solid transparent; border-bottom: 13px solid transparent; margin-left: 6px; }
+.pbig.replay { top: 50%; }
+.pbig.replay::after { border: 4px solid #fff; border-left-color: transparent; border-radius: 50%; width: 22px; height: 22px; margin: 0; }
+.pcap { width: min(100%, 320px); display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; min-height: 52px; }
+.pcap strong { display: block; font-size: 16px; }
+.pcap span:last-child { font-size: 14px; color: var(--muted); }
+.pctl { display: flex; gap: 8px; }
+.pctl button {
+  font: 500 14px/1 var(--font-body); padding: 9px 16px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg);
+}
+.pctl button.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+
+footer .wrap { padding-block: 0 40px; color: var(--muted); font-size: 13px; text-align: center; }
+
+/* Lightbox */
+.lb { position: fixed; inset: 0; z-index: 20; background: rgba(10, 6, 16, .94); display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.lb .screen { border-radius: 14px; }
+.lb .tip { font-size: 14px; padding: 9px 12px; }
+.lb button { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); font: inherit; font-size: 15px; background: #fff; color: #111; border: 0; border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+
+@media (max-width: 360px) { .strip { grid-template-columns: repeat(2, 1fr); } h1 { font-size: 30px; } }
+@media (prefers-reduced-motion: reduce) { .spot::after { animation: none; opacity: 0; } summary::after { transition: none; } html { scroll-behavior: auto; } }
+html { scroll-behavior: smooth; }
+
+/* 강사용 추가: PC 화면은 브라우저 창 모양으로 */
+.crumb .tag { display: inline-block; font-size: 11px; font-weight: 700; color: var(--surface); background: var(--accent); padding: 1px 8px; border-radius: 999px; margin-left: 4px; vertical-align: 1px; }
+.phone.pc { width: 100%; border-radius: 14px; padding: 22px 6px 6px; position: relative; }
+.phone.pc::before { content: ""; position: absolute; left: 13px; top: 8px; width: 7px; height: 7px; border-radius: 50%; background: #ff5f57; box-shadow: 12px 0 0 #febc2e, 24px 0 0 #28c840; }
+.phone.pc .screen { border-radius: 8px; }
+.phone.mid { width: min(100%, 360px); }
+.tip.start { left: -6px; transform: none; }
+.tip.start::before { left: 14px; }
+.spot.lt > .n { left: -28px; top: 50%; margin-top: -10px; }
+.spot.rt > .n { left: calc(100% + 6px); top: 50%; margin-top: -10px; }
+.pstage.pc { width: 100%; }
+.pscreen.pc { aspect-ratio: 4 / 3; }
+.layer.tall { width: 56%; margin: 0 auto; }
+/* 영상: 긴 화면은 --sy(%)만큼 올려서 표시 부분이 보이게 */
+.slide .layer { transform: translateY(calc(var(--sy, 0) * -1%)); }
+.slide .banner { white-space: normal; text-align: center; width: max-content; max-width: 88%; font-size: 13px; line-height: 1.45; padding: 9px 14px; }
+.player .bars { width: 100%; gap: 3px; }
+.player .pcap { width: 100%; min-height: 76px; }
+.pcap strong { font-size: 17px; }
+.pcap span:last-child { font-size: 15px; line-height: 1.55; color: var(--fg); }
+.slide .mockwrap { padding: 9% 5% 0; display: grid; gap: 10px; }
+.slide .mockwrap .mock table { font-size: 12px; }
+.slide .mockwrap .mock th, .slide .mockwrap .mock td { padding: 7px 8px; }
+.layer.mid { width: 78%; margin: 0 auto; }
+.pair { display: grid; grid-template-columns: 1.7fr 1fr; gap: 10px; align-items: start; width: 100%; }
+.pair > * { min-width: 0; display: grid; gap: 6px; justify-items: center; }
+.pair .phone { width: 100%; }
+.pair small { font-size: 12px; color: var(--muted); font-weight: 700; }
+.env { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.env div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 2px; min-width: 0; }
+.env span { font-size: 13px; color: var(--muted); }
+.env strong { font-size: 15px; word-break: break-all; }
+.who { display: inline-block; font: 700 11px/1.6 var(--font-body); padding: 0 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); vertical-align: 2px; }
+.who.stu { background: var(--good-soft); color: var(--good); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.ubtn { display: inline-grid; place-items: center; min-width: 30px; height: 28px; padding: 0 10px; border: 1.5px solid #2b3f9e; color: #2b3f9e; background: #fff; border-radius: 6px; font: 700 12px/1 var(--font-body); }
+.ubtn.round { border-radius: 50%; padding: 0; width: 28px; background: #2b3f9e; color: #fff; }
+.mock { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; width: 100%; }
+.mock table { font-size: 13px; }
+.mock th { background: #2b3f9e; color: #fff; }
+.mock td { background: var(--surface); }
+.mock tr.end td { background: var(--warn-soft); font-weight: 700; }
+.mock b.s { color: #2b3f9e; }
+@media (max-width: 480px) { .pair { grid-template-columns: 1fr; } .env { grid-template-columns: 1fr; } }
+</style>
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); } body { margin: 0; }</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <p class="crumb">edusys 앱 › <b>완공</b> <span class="tag">강사용</span></p>
+    <h1>완공 강사용 사용 안내</h1>
+    <p class="lead">담임반 학생들이 완공을 시작할 수 있게 열어 주고, 진행 상황과 학습현황기록을 확인하는 방법입니다. 아래 6단계만 기억하면 됩니다.</p>
+    <div class="env">
+      <div><span>노트북 · PC</span><strong>크롬에서 edutest.kr/teacher</strong></div>
+      <div><span>핸드폰</span><strong>EDUSYS 앱에서 로그인</strong></div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="목차">
+  <div class="wrap">
+    <a href="#daily" class="on">이용 순서</a>
+    <a href="#buttons">버튼 이해하기</a>
+    <a href="#more">통계·랭킹·더공</a>
+    <a href="#faq">자주 묻는 질문</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+
+    <section id="daily">
+      <h2>완공 반 열기 6단계</h2>
+      <ol class="strip">
+        <li><a href="#s1"><span class="n">1</span><span>강사 사이트 로그인</span></a></li>
+        <li><a href="#s2"><span class="n">2</span><span>학교 아이콘</span></a></li>
+        <li><a href="#s3"><span class="n">3</span><span>완공 메뉴</span></a></li>
+        <li><a href="#s4"><span class="n">4</span><span>날짜 확인 후 담임반</span></a></li>
+        <li><a href="#s5"><span class="n">5</span><span>전체 선택 후 OPEN</span></a></li>
+        <li><a href="#s6"><span class="n">6</span><span>END·제출 확인</span></a></li>
+      </ol>
+
+      <div class="player" id="player">
+        <div class="player-head"><strong>영상으로 한 번에 보기</strong><span id="ptime"></span></div>
+        <div class="bars" id="pbars"></div>
+        <div class="pstage pc">
+          <div class="phone pc"><div class="screen pscreen pc">
+            <div class="slide on" style="--slide-bg:#ffffff" data-dur="8" data-title="강사 사이트에 로그인" data-desc="크롬 주소창에 edutest.kr/teacher 를 입력하고, 학원에서 받은 아이디·비밀번호로 로그인합니다. 로그인 정보는 학원 상담실에 문의하시기 바랍니다."><div class="layer mid">
+              <img src="t-wangong-login.png" alt="" width="420" height="400">
+              <span class="spot dim" style="--x:57;--y:56.5;--w:20.5;--h:18;--r:8px"><span class="tap"></span><span class="tip">로그인</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#e8e8e8" data-dur="7" data-title="상단 학교 아이콘 누르기" data-desc="로그인하면 맨 위에 메뉴가 보입니다. 왼쪽 위 학교 모양 아이콘을 누르면 edusys 홈 화면으로 갑니다."><div class="layer">
+              <img src="t-wangong-topnav.png" alt="" width="1000" height="96">
+              <span class="spot dim" style="--x:4.2;--y:4;--w:3.2;--h:29;--r:6px"><span class="tap"></span><span class="tip">학교 아이콘</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#e8e8e8" data-dur="7" data-title="또는 App › App Main" data-desc="학교 아이콘 대신 메뉴의 App에 마우스를 올리고 App Main을 눌러도 같은 홈 화면이 열립니다."><div class="layer">
+              <img src="t-wangong-topnav.png" alt="" width="1000" height="96">
+              <span class="spot dim" style="--x:91.2;--y:40;--w:6.5;--h:58;--r:4px"><span class="tap"></span><span class="tip end">App › App Main</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#ffffff" data-dur="6" data-title="완공 메뉴 누르기" data-desc="홈 화면 아이콘 중 오른쪽 위 완공을 누릅니다. 완공 CLASS 화면이 열립니다."><div class="layer tall">
+              <img src="t-wangong-home.png" alt="" width="480" height="557">
+              <span class="spot dim" style="--x:79;--y:38;--w:13;--h:13;--r:12px"><span class="tap"></span><span class="tip end">완공 누르기</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#f3f4f7" data-dur="8" data-title="오늘 날짜 확인하기" data-desc="달력에서 오늘(Today)이 선택되어 있고, 아래 날짜가 오늘인지 확인합니다. 다른 날을 보려면 달력에서 날짜를 누릅니다."><div class="layer">
+              <img src="t-wangong-class-main.png" alt="" width="1087" height="811">
+              <span class="spot dim" style="--x:42.2;--y:59.7;--w:15.3;--h:3.9;--r:999px"><span class="tap"></span><span class="tip">오늘 날짜 확인</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#f3f4f7" data-dur="7" data-title="완공할 담임반 누르기" data-desc="담임반 목록에서 오늘 완공하는 반을 누르면, 아래에 그 반 학생 표가 나옵니다."><div class="layer">
+              <img src="t-wangong-class-main.png" alt="" width="1087" height="811">
+              <span class="spot dim" style="--x:1.8;--y:91.3;--w:96.4;--h:3.6;--r:6px"><span class="tap"></span><span class="tip up">담임반 누르기</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#ffffff" data-dur="8" data-title="처음 상태는 모두 CLOSE" data-desc="학생 표의 상태가 처음엔 모두 CLOSE입니다. 이때는 학생 화면의 ▶ 버튼이 잠겨 있어서 학생이 시작할 수 없습니다."><div class="layer">
+              <img src="t-wangong-tbl-close.png" alt="" width="1437" height="767">
+              <span class="spot dim" style="--x:45.4;--y:63;--w:10.3;--h:34.6;--r:6px"><span class="tip up">모두 CLOSE</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#f3f3f6" data-dur="7" data-title="CLOSE일 때 학생 화면" data-desc="학생 화면의 ▶ 버튼이 회색입니다. 학생이 눌러도 완공이 시작되지 않습니다."><div class="layer tall">
+              <img src="t-wangong-stu-close.png" alt="" width="542" height="797">
+              <span class="spot dim" style="--x:85.2;--y:70.1;--w:8.5;--h:5.8;--r:50%"><span class="tip up end">회색 ▶ · 못 누릅니다</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#ffffff" data-dur="8" data-title="학생 전체 선택" data-desc="표 맨 왼쪽 위 체크박스를 누르면 반 학생이 모두 체크됩니다. 몇 명만 열고 싶으면 그 학생만 체크합니다."><div class="layer">
+              <img src="t-wangong-tbl-close.png" alt="" width="1437" height="767">
+              <span class="spot dim" style="--x:3.9;--y:58.5;--w:1.9;--h:3.3;--r:4px"><span class="tap"></span><span class="tip start">전체 선택</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#ffffff" data-dur="7" data-title="OPEN 누르기" data-desc="체크한 뒤 오른쪽 위 OPEN을 누릅니다. 체크한 학생들의 화면에 ▶ 버튼이 켜집니다."><div class="layer">
+              <img src="t-wangong-tbl-open.png" alt="" width="1457" height="756">
+              <span class="spot dim" style="--x:77.6;--y:9.2;--w:4.6;--h:4.3;--r:6px"><span class="tap"></span><span class="tip end">OPEN</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#ffffff" data-dur="8" data-title="상태가 OPEN인지 확인" data-desc="상태가 OPEN으로 바뀌었는지 확인합니다. 바로 바뀌지 않으면 OPEN 왼쪽의 파란 새로고침(↻) 버튼을 누릅니다."><div class="layer">
+              <img src="t-wangong-tbl-open.png" alt="" width="1457" height="756">
+              <span class="spot dim" style="--x:45.6;--y:63.7;--w:9.5;--h:35;--r:6px"><span class="tip up">OPEN으로 바뀜</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#f3f3f6" data-dur="9" data-title="학생이 ▶ 눌러 시작" data-desc="이제 학생 화면의 ▶ 버튼이 보라색으로 켜집니다. 처음 시작은 학생만 할 수 있고, 강사는 멈추기(STOP)와 다시 재생(PLAY)만 할 수 있습니다."><div class="layer tall">
+              <img src="t-wangong-stu-open.png" alt="" width="532" height="742">
+              <span class="spot dim" style="--x:84.8;--y:75;--w:8.8;--h:6.3;--r:50%"><span class="tap"></span><span class="tip up end">학생이 시작</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#ffffff" data-dur="9" data-title="제출하면 END" data-desc="학생이 공부를 끝내고 학습현황기록을 제출하면 상태가 END로 바뀌고, 종료시간과 '제출'이 표시됩니다. 밤 10시 전까지 제출하도록 챙겨 주시기 바랍니다."><div class="layer mockwrap">
+              <div class="mock">
+                <table>
+                  <thead><tr><th>이름</th><th>상태</th><th>시작</th><th>종료</th><th>학습현황기록</th></tr></thead>
+                  <tbody>
+                    <tr><td>윤○○</td><td><b class="s">OPEN</b></td><td></td><td></td><td></td></tr>
+                    <tr class="end"><td>최○○</td><td><b class="s">END</b></td><td>12:30:45</td><td>14:40:55</td><td>제출</td></tr>
+                    <tr><td>주○○</td><td><b class="s">OPEN</b></td><td></td><td></td><td></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div><span class="banner">제출한 학생만 <span class="btn">END</span> · 나머지는 아직 진행 중</span></div>
+            <div class="slide" style="--slide-bg:#ffffff" data-dur="9" data-title="켜 둔 채 귀가했다면 STOP" data-desc="▶를 켠 채 귀가한 학생은 체크하고 STOP을 누르면 학생 화면의 시간이 멈춥니다. 종료가 아니라 잠깐 멈춘 상태라서 PLAY로 다시 이어갈 수 있습니다."><div class="layer">
+              <img src="t-wangong-tbl-open.png" alt="" width="1457" height="756">
+              <span class="spot dim" style="--x:88.7;--y:9.2;--w:4.5;--h:4.3;--r:6px"><span class="tap"></span><span class="tip end">STOP</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#f3f4f7" data-dur="9" data-title="통계 › 일간에서 확인 후 발송" data-desc="통계 탭 › 일간에서 반을 누르면 학생별 시간과 기록이 나옵니다. 총 공부시간과 내용을 확인하고, 전체 선택 후 발송을 누르면 학부모님 앱으로 리포트가 전송됩니다."><div class="layer">
+              <img src="t-wangong-stats-day.png" alt="" width="1230" height="882">
+              <span class="spot dim" style="--x:3.6;--y:63.3;--w:3.5;--h:3.2;--r:6px"><span class="tap"></span><span class="tip">발송</span></span>
+            </div></div>
+            <div class="slide" style="--slide-bg:#f3f3f6" data-dur="8" data-title="학부모님이 받는 리포트" data-desc="학부모님 앱에 완공 일간 리포트가 도착합니다. 보내기 전에 총 공부시간이 맞는지 꼭 확인해 주시기 바랍니다."><div class="layer tall">
+              <img src="t-wangong-push-day.png" alt="" width="386" height="476">
+            </div><span class="banner">학부모님 앱에 도착하는 완공 일간 리포트</span></div>
+          </div></div>
+          <button type="button" class="pbig" id="pbig" aria-label="영상 재생"></button>
+        </div>
+        <div class="pcap" aria-live="polite"><span class="n" id="pnum">1</span><div><strong id="ptitle"></strong><span id="pdesc"></span></div></div>
+        <div class="pctl">
+          <button type="button" id="pprev">이전</button>
+          <button type="button" class="primary" id="pplay">재생</button>
+          <button type="button" id="pnext">다음</button>
+        </div>
+      </div>
+
+      <div class="steps">
+        <article class="step" id="s1">
+          <div class="step-head"><span class="n">1</span><div><h3>강사 사이트에 로그인</h3><p>크롬에서 <span class="key">edutest.kr/teacher</span> 로 들어가 아이디와 비밀번호로 로그인합니다. 로그인 정보는 학원 상담실에 문의하시기 바랍니다.</p></div></div>
+          <figure class="shot">
+            <button type="button" class="phone pc mid" data-zoom aria-label="1단계 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-login.png" alt="EDU-TEST 강사 로그인 화면" width="420" height="400">
+              <span class="spot dim" style="--x:57;--y:56.5;--w:20.5;--h:18;--r:8px"><span class="tip">로그인</span></span>
+            </div></button>
+          </figure>
+        </article>
+
+        <article class="step" id="s2">
+          <div class="step-head"><span class="n">2</span><div><h3>상단 학교 아이콘 누르기</h3><p>맨 위 왼쪽의 <span class="key">학교 아이콘</span>을 누릅니다. 메뉴의 <span class="key">App</span> › <span class="key">App Main</span> 을 눌러도 같은 화면이 열립니다.</p></div></div>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="2단계 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-topnav.png" alt="강사 사이트 상단 메뉴의 학교 아이콘과 App 메뉴" width="1000" height="96">
+              <span class="spot rt" style="--x:4.2;--y:4;--w:3.2;--h:29;--r:6px"><span class="n">1</span></span>
+              <span class="spot lt" style="--x:91.2;--y:40;--w:6.5;--h:58;--r:4px"><span class="n">2</span></span>
+            </div></button>
+            <ol class="legend">
+              <li><span class="n">1</span><span><b>학교 아이콘</b> · 누르면 바로 edusys 홈으로 갑니다.</span></li>
+              <li><span class="n">2</span><span><b>App › App Main</b> · 같은 홈 화면이 열립니다. 아래 칸의 채팅은 채팅 화면입니다.</span></li>
+            </ol>
+          </figure>
+        </article>
+
+        <article class="step" id="s3">
+          <div class="step-head"><span class="n">3</span><div><h3>완공 메뉴 누르기</h3><p>edusys 홈 화면 아이콘 중 <span class="key">완공</span>을 누릅니다.</p></div></div>
+          <figure class="shot">
+            <button type="button" class="phone" data-zoom aria-label="3단계 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-home.png" alt="edusys 홈 화면의 완공 메뉴" width="480" height="557">
+              <span class="spot dim" style="--x:79;--y:38;--w:13;--h:13;--r:12px"><span class="tip end">완공 누르기</span></span>
+            </div></button>
+          </figure>
+        </article>
+
+        <article class="step" id="s4">
+          <div class="step-head"><span class="n">4</span><div><h3>완공 날짜 확인 후 담임반 누르기</h3><p>달력에서 오늘 날짜(<span class="key">Today</span>)를 확인하고, 아래 담임반 목록에서 완공할 반을 누릅니다.</p></div></div>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="4단계 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-class-main.png" alt="완공 CLASS 달력과 담임반 목록" width="1087" height="811">
+              <span class="spot" style="--x:42.2;--y:59.7;--w:15.3;--h:3.9;--r:999px"><span class="n">1</span></span>
+              <span class="spot" style="--x:1.8;--y:91.3;--w:96.4;--h:3.6;--r:6px"><span class="n">2</span></span>
+            </div></button>
+            <ol class="legend">
+              <li><span class="n">1</span><span><b>완공 날짜</b> · 오늘 날짜가 맞는지 확인합니다.</span></li>
+              <li><span class="n">2</span><span><b>담임반</b> · 반을 누르면 아래에 학생 목록이 나옵니다.</span></li>
+            </ol>
+          </figure>
+        </article>
+
+        <article class="step" id="s5">
+          <div class="step-head"><span class="n">5</span><div><h3>학생 전체 선택 후 OPEN</h3><p>표 맨 왼쪽 위 체크박스로 학생을 모두 선택하고 <span class="key">OPEN</span>을 누릅니다. 상태가 OPEN으로 바뀌면 학생들이 ▶ 버튼을 누를 수 있습니다.</p></div></div>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="5단계 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-tbl-open.png" alt="학생 전체 선택 후 OPEN 상태가 된 담임반 표" width="1457" height="756">
+              <span class="spot" style="--x:4.2;--y:58.9;--w:2;--h:3.6;--r:4px"><span class="n">1</span></span>
+              <span class="spot lt" style="--x:77.6;--y:9.2;--w:4.6;--h:4.3;--r:6px"><span class="n">2</span></span>
+              <span class="spot lt" style="--x:45.6;--y:63.7;--w:9.5;--h:35;--r:6px"><span class="n">3</span></span>
+            </div></button>
+            <ol class="legend">
+              <li><span class="n">1</span><span><b>전체 선택</b> · 한 번 누르면 반 학생이 모두 체크됩니다.</span></li>
+              <li><span class="n">2</span><span><b>OPEN</b> · 학생 화면에 ▶ 버튼을 보여 줍니다.</span></li>
+              <li><span class="n">3</span><span><b>상태</b> · CLOSE가 OPEN으로 바뀌었는지 확인합니다.</span></li>
+            </ol>
+          </figure>
+        </article>
+
+        <div class="alarm" role="note">
+          <strong>▶ 시작은 학생만 할 수 있습니다</strong>
+          <p>처음 ▶ 버튼은 학생 화면에서 학생이 직접 누릅니다. 강사 화면에서는 멈추거나(STOP) 다시 재생(PLAY)하는 것만 할 수 있습니다.</p>
+        </div>
+
+        <article class="step" id="s6">
+          <div class="step-head"><span class="n">6</span><div><h3>END와 학습현황기록 제출 확인</h3><p>학생이 학습현황기록을 제출하면 상태가 <span class="key">END</span>로 바뀌고, 종료시간과 학습현황기록 <span class="key">제출</span>이 표시됩니다.</p></div></div>
+          <figure class="shot">
+            <div class="mock">
+              <table>
+                <thead><tr><th>이름</th><th>상태</th><th>시작시간</th><th>종료시간</th><th>학습현황기록</th></tr></thead>
+                <tbody>
+                  <tr><td>윤○○</td><td><b class="s">OPEN</b></td><td></td><td></td><td></td></tr>
+                  <tr class="end"><td>최○○</td><td><b class="s">END</b></td><td>12:30:45</td><td>14:40:55</td><td>제출</td></tr>
+                  <tr><td>주○○</td><td><b class="s">OPEN</b></td><td></td><td></td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <figcaption>제출한 학생은 END, 아직 공부 중이거나 제출 전이면 OPEN·PLAY로 보입니다</figcaption>
+          </figure>
+        </article>
+      </div>
+    </section>
+
+    <section id="buttons">
+      <p class="eyebrow">5단계 자세히 보기</p>
+      <h2>OPEN·CLOSE·STOP·PLAY 버튼</h2>
+      <p class="sub">학생을 체크한 뒤 버튼을 누르면, 체크한 학생의 화면에만 적용됩니다.</p>
+
+      <div class="fields">
+        <div class="field">
+          <h3><span class="ubtn round" aria-hidden="true">↻</span>새로고침</h3>
+          <p>버튼을 눌렀는데 시작시간이나 상태가 바로 안 나오면 누릅니다. 바로 최신 데이터가 나옵니다.</p>
+        </div>
+        <div class="field">
+          <h3><span class="ubtn">OPEN</span>학생 화면 ▶ 버튼 표시</h3>
+          <p>학생 화면에 ▶ 버튼이 활성화됩니다. 완공 시작 전에 꼭 눌러 주시기 바랍니다.</p>
+        </div>
+        <div class="field">
+          <h3><span class="ubtn">CLOSE</span>학생 화면 ▶ 버튼 숨김</h3>
+          <p>▶ 버튼이 비활성화됩니다. OPEN을 잘못 눌렀을 때 바로 다시 닫을 수 있습니다.</p>
+        </div>
+        <div class="field">
+          <h3><span class="ubtn">STOP</span>학생 재생 정지</h3>
+          <p>학생 화면의 ▶ 버튼과 시간이 강제로 멈춥니다. 종료가 아니라 잠깐 멈춘 상태입니다.</p>
+        </div>
+        <div class="field">
+          <h3><span class="ubtn">PLAY</span>정지 해제</h3>
+          <p>STOP으로 멈춘 학생의 시간을 다시 흐르게 합니다.</p>
+        </div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="상태 비교">
+        <button type="button" role="tab" id="t-close" aria-selected="true" aria-controls="p-close">CLOSE 상태</button>
+        <button type="button" role="tab" id="t-open" aria-selected="false" aria-controls="p-open">OPEN 상태</button>
+      </div>
+      <div class="pane" role="tabpanel" id="p-close" aria-labelledby="t-close">
+        <p>처음에는 모두 <b>CLOSE</b>입니다. 학생 화면의 ▶ 버튼이 회색이라 누를 수 없습니다. OPEN을 눌러야 ▶ 버튼이 보입니다.</p>
+        <figure class="shot">
+          <div class="pair">
+            <div>
+              <button type="button" class="phone pc" data-zoom aria-label="CLOSE 상태 강사 화면 크게 보기"><div class="screen">
+                <img src="t-wangong-tbl-close.png" alt="상태가 모두 CLOSE인 강사 화면" width="1437" height="767" loading="lazy">
+                <span class="spot in" style="--x:45.4;--y:63;--w:10.3;--h:34.6;--r:6px"></span>
+              </div></button>
+              <small>강사 화면</small>
+            </div>
+            <div>
+              <button type="button" class="phone" data-zoom aria-label="CLOSE 상태 학생 화면 크게 보기"><div class="screen">
+                <img src="t-wangong-stu-close.png" alt="▶ 버튼이 회색인 학생 화면" width="542" height="797" loading="lazy">
+                <span class="spot" style="--x:85.2;--y:70.1;--w:8.5;--h:5.8;--r:50%"></span>
+              </div></button>
+              <small>학생 화면 · ▶ 비활성</small>
+            </div>
+          </div>
+        </figure>
+      </div>
+      <div class="pane" role="tabpanel" id="p-open" aria-labelledby="t-open" hidden>
+        <p>OPEN을 누르면 학생 화면의 ▶ 버튼이 보라색으로 바뀝니다. 이제 학생들이 눌러서 완공을 시작할 수 있습니다.</p>
+        <figure class="shot">
+          <div class="pair">
+            <div>
+              <button type="button" class="phone pc" data-zoom aria-label="OPEN 상태 강사 화면 크게 보기"><div class="screen">
+                <img src="t-wangong-tbl-open.png" alt="상태가 모두 OPEN인 강사 화면" width="1457" height="756" loading="lazy">
+                <span class="spot in" style="--x:45.6;--y:63.7;--w:9.5;--h:35;--r:6px"></span>
+              </div></button>
+              <small>강사 화면</small>
+            </div>
+            <div>
+              <button type="button" class="phone" data-zoom aria-label="OPEN 상태 학생 화면 크게 보기"><div class="screen">
+                <img src="t-wangong-stu-open.png" alt="▶ 버튼이 활성화된 학생 화면" width="532" height="742" loading="lazy">
+                <span class="spot" style="--x:84.8;--y:75;--w:8.8;--h:6.3;--r:50%"></span>
+              </div></button>
+              <small>학생 화면 · ▶ 활성</small>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section id="more">
+      <p class="eyebrow">필요할 때 펼쳐 보십시오</p>
+      <h2>통계·랭킹·더공</h2>
+
+      <details id="stats">
+        <summary><div><h3>통계</h3><p>일간 기록 확인·수정과 학부모님 발송, 월간·추이</p></div></summary>
+        <div class="body">
+          <div class="tabs" role="tablist" aria-label="통계 종류">
+            <button type="button" role="tab" id="t-day" aria-selected="true" aria-controls="p-day">일간</button>
+            <button type="button" role="tab" id="t-month" aria-selected="false" aria-controls="p-month">월간</button>
+            <button type="button" role="tab" id="t-trend" aria-selected="false" aria-controls="p-trend">추이</button>
+          </div>
+          <div class="pane" role="tabpanel" id="p-day" aria-labelledby="t-day">
+            <p><b>통계 › 일간</b>에서 담임반을 누르면 학생별 시작·종료시간과 학습현황기록이 나옵니다.</p>
+            <figure class="shot">
+              <button type="button" class="phone pc" data-zoom aria-label="일간 통계 화면 크게 보기"><div class="screen">
+                <img src="t-wangong-stats-day.png" alt="일간 통계 표" width="1230" height="882" loading="lazy">
+                <span class="spot" style="--x:3.6;--y:63.3;--w:3.5;--h:3.2;--r:6px"><span class="n">1</span></span>
+                <span class="spot" style="--x:31.5;--y:82.2;--w:6.1;--h:3.4;--r:6px"><span class="n">2</span></span>
+                <span class="spot lt" style="--x:58.9;--y:80.7;--w:2.2;--h:2.6;--r:4px"><span class="n">3</span></span>
+                <span class="spot lt" style="--x:84.2;--y:77.7;--w:2.2;--h:2.6;--r:4px"><span class="n">4</span></span>
+                <span class="spot" style="--x:91.9;--y:73.5;--w:7;--h:3.6;--r:4px"><span class="n">5</span></span>
+              </div></button>
+              <ol class="legend">
+                <li><span class="n">1</span><span><b>발송</b> · 전체 선택 후 누르면 학부모님 앱으로 완공 일간 리포트가 푸쉬됩니다.</span></li>
+                <li><span class="n">2</span><span><b>총 공부시간</b> · 시간을 고쳐야 할 때 직접 수정할 수 있습니다.</span></li>
+                <li><span class="n">3</span><span><b>학습내용 수정</b> · 학생이 쓴 내용을 고칠 수 있습니다.</span></li>
+                <li><span class="n">4</span><span><b>세부내용</b> · 선생님 개별 코멘트를 넣을 수 있습니다.</span></li>
+                <li><span class="n">5</span><span><b>반평균</b> · 시간과 분만 표시됩니다.</span></li>
+              </ol>
+            </figure>
+            <figure class="shot">
+              <div class="pair">
+                <div>
+                  <button type="button" class="phone" data-zoom aria-label="학부모 푸쉬 리포트 크게 보기"><div class="screen">
+                    <img src="t-wangong-push-day.png" alt="학부모님께 가는 완공 일간 리포트" width="386" height="476" loading="lazy">
+                  </div></button>
+                  <small>학부모님이 받는 리포트</small>
+                </div>
+                <div>
+                  <button type="button" class="phone" data-zoom aria-label="학습내용 수정 창 크게 보기"><div class="screen">
+                    <img src="t-wangong-edit-content.png" alt="학습내용 수정 창" width="372" height="251" loading="lazy">
+                  </div></button>
+                  <small>학습내용 수정 창</small>
+                </div>
+              </div>
+            </figure>
+          </div>
+          <div class="pane" role="tabpanel" id="p-month" aria-labelledby="t-month" hidden>
+            <p><b>월간</b>을 누르면 달별로 학생의 완공 시간, 완공 점수, 등급, 누적 포인트를 볼 수 있습니다.</p>
+            <figure class="shot">
+              <button type="button" class="phone pc" data-zoom aria-label="월간 통계 화면 크게 보기"><div class="screen">
+                <img src="t-wangong-stats-month.png" alt="월간 통계 표" width="1227" height="812" loading="lazy">
+                <span class="spot" style="--x:29.4;--y:79.4;--w:12.9;--h:4.3;--r:4px"><span class="n">1</span></span>
+                <span class="spot" style="--x:42.3;--y:79.4;--w:11.2;--h:4.3;--r:4px"><span class="n">2</span></span>
+              </div></button>
+              <ol class="legend">
+                <li><span class="n">1</span><span><b>완공 누적 시간</b> · 재원하는 동안 완공한 모든 시간이 쌓여 보입니다.</span></li>
+                <li><span class="n">2</span><span><b>총 공부시간</b> · 선택한 달의 공부시간만 쌓여 보입니다.</span></li>
+              </ol>
+            </figure>
+          </div>
+          <div class="pane" role="tabpanel" id="p-trend" aria-labelledby="t-trend" hidden>
+            <p><b>추이</b>에서 담임반을 누르면 반에서 가장 많이·적게 공부한 학생을 일간·월간 그래프로 볼 수 있습니다.</p>
+            <figure class="shot">
+              <div class="pair">
+                <div>
+                  <button type="button" class="phone" data-zoom aria-label="추이 화면 크게 보기"><div class="screen">
+                    <img src="t-wangong-stats-trend.png" alt="추이 탭과 담임반 목록" width="532" height="862" loading="lazy">
+                    <span class="spot" style="--x:56.6;--y:11;--w:11.5;--h:3;--r:999px"><span class="n">1</span></span>
+                    <span class="spot" style="--x:5.6;--y:46;--w:88.4;--h:3.8;--r:4px"><span class="n">2</span></span>
+                  </div></button>
+                </div>
+                <div>
+                  <button type="button" class="phone" data-zoom aria-label="추이 그래프 크게 보기"><div class="screen">
+                    <img src="t-wangong-trend-chart.png" alt="일간 추이와 월간 추이 그래프" width="532" height="756" loading="lazy">
+                  </div></button>
+                </div>
+              </div>
+              <ol class="legend">
+                <li><span class="n">1</span><span><b>추이</b> 탭을 누르고</span></li>
+                <li><span class="n">2</span><span><b>담임반</b>을 누르면 최대·최저 학생과 시간이 그래프로 나옵니다.</span></li>
+              </ol>
+            </figure>
+          </div>
+        </div>
+      </details>
+
+      <details id="ranking">
+        <summary><div><h3>랭킹</h3><p>같은 학년 기준 전국 TOP 5와 반 학생 순위</p></div></summary>
+        <div class="body">
+          <p>주간·월간으로 같은 학년 학생들의 완공 누적시간을 비교합니다. <b>개인</b>과 <b>학교</b>를 눌러 바꿔 볼 수 있습니다.</p>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="개인 랭킹 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-rank-personal.png" alt="주간 개인 TOP 5" width="1242" height="580" loading="lazy">
+              <span class="spot" style="--x:22.5;--y:35.5;--w:6.5;--h:8.5;--r:8px"><span class="n">1</span></span>
+              <span class="spot in" style="--x:2.5;--y:70.5;--w:94.4;--h:19;--r:8px"><span class="n">2</span></span>
+            </div></button>
+            <ol class="legend">
+              <li><span class="n">1</span><span><b>개인</b> · 동일 학년 기준 완공 누적시간이 가장 많은 학생 전국 TOP 5</span></li>
+              <li><span class="n">2</span><span><b>TOP 5 목록</b> · 지역 기준은 소속 학원입니다.</span></li>
+            </ol>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="학교 랭킹 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-rank-school.png" alt="주간 학교 TOP 5" width="1222" height="507" loading="lazy">
+            </div></button>
+            <figcaption><b>학교</b>를 누르면 동일 학년 기준 완공 누적시간이 가장 많은 학교 전국 TOP 5가 나옵니다</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="주간 개인 랭킹 표 크게 보기"><div class="screen">
+              <img src="t-wangong-rank-table.png" alt="담임반 학생의 전국·학군지·학교 기준 순위" width="1217" height="695" loading="lazy">
+            </div></button>
+            <figcaption>담임반을 누르면 학생별 전국·학군지·학교 순위(%)가 나옵니다</figcaption>
+          </figure>
+          <p class="note">기준은 동일 학년입니다. 학군지는 목동·대치동 학생들과 비교한 순위입니다.</p>
+        </div>
+      </details>
+
+      <details id="deogong">
+        <summary><div><h3>더공</h3><p>학원 밖 자기주도학습 현황, 상담할 때 참고</p></div></summary>
+        <div class="body">
+          <p><b>더공</b>은 학원 밖에서 더 공부한다는 뜻입니다. 학생이 스스로 공부할 때 과목별 플래너를 쓰고 타이머로 시간을 재면, 그 기록을 여기서 볼 수 있습니다.</p>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="더공 현황 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-deogong.png" alt="더공 현황 표" width="1227" height="897" loading="lazy">
+            </div></button>
+            <figcaption>시행일 기간을 정해 검색하면 학생별 과목 시간이 나옵니다</figcaption>
+          </figure>
+          <div class="facts">
+            <div class="fact"><span>더공 누적시간</span><strong>지금까지 쌓인 시간</strong></div>
+            <div class="fact"><span>과목별 시간</span><strong>국어·영어·수학·사회·과학</strong></div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section id="faq">
+      <p class="eyebrow">헷갈릴 때</p>
+      <h2>자주 묻는 질문</h2>
+      <div class="faq">
+        <details><summary>학생이 ▶ 버튼을 켠 채로 그냥 귀가했습니다. 강제로 멈출 수 있습니까?</summary><div class="body">
+          <p>가능합니다. 해당 학생을 체크한 뒤 STOP을 누르면 학생 화면의 ▶ 버튼과 시간이 멈춥니다. 단, 종료가 아니라 임시로 멈춘 것입니다. 학습현황기록을 제출해야 종료되고 종료시간이 나옵니다.</p>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="STOP 예시 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-qa-stop.png" alt="학생을 체크하고 STOP을 누르는 화면" width="1086" height="442" loading="lazy">
+            </div></button>
+          </figure>
+        </div></details>
+        <details><summary>학습현황기록을 제출하지 않은 학생, 나중에 제출할 수 있습니까?</summary><div class="body">
+          <p>가능합니다. 완공 시간은 오전 9:30부터 밤 10:00까지이고, 밤 10시 전까지만 제출할 수 있습니다. 제출하지 않아도 밤 10시가 되면 자동으로 종료되고 총 공부시간은 1시간으로 자동 세팅됩니다. 밤 10시 이후에는 수정할 수 없습니다.</p>
+        </div></details>
+        <details><summary>완공이 끝난 뒤에 시간을 수정할 수 있습니까?</summary><div class="body">
+          <p>가능합니다. 다만 통계가 나오기 때문에 학부모님께 완공 푸쉬를 보내기 전에 꼭 확인해 주시기 바랍니다. 제출하지 않은 학생은 핸드폰 앱으로 바로 제출하도록 관리해 주시기 바랍니다.</p>
+        </div></details>
+        <details><summary>완공 시간이 이상하게 나옵니다.</summary><div class="body">
+          <p>두 가지 경우입니다. ① 제출은 했는데 시간이 이상하고 내용이 안 나오면, 패드에 있는 앱 아이콘으로 진행한 경우입니다. 패드 앱은 업데이트가 안 되어 완공용으로 쓰면 안 되고, 사이트 edutest.kr 로 들어가서 해야 합니다. 이미 귀가했다면 연락해서 학생 핸드폰이나 컴퓨터 사이트로 빠르게 ▶ 클릭 후 종료하고 제출하게 해 주시기 바랍니다(밤 10시까지). 시작·종료·총 공부시간만 강사 화면에서 수정해 주시기 바랍니다.</p>
+          <p>② 핸드폰에서 ▶을 누르고 화면을 그대로 두었는데 시간이 이상하면, 중간에 문제가 생겨 시간이 멈춘 경우입니다. 학생에게 앱을 열어 ▶ 클릭 후 홈 버튼을 눌러 앱 화면을 닫게 해 주시기 바랍니다. 완공이 끝나면 앱을 열어 종료 후 학습현황기록을 제출하면 됩니다.</p>
+          <figure class="shot">
+            <button type="button" class="phone pc" data-zoom aria-label="시간이 이상한 예시 화면 크게 보기"><div class="screen">
+              <img src="t-wangong-qa-time.png" alt="시작과 종료 시간이 같고 총 공부시간이 0인 행" width="935" height="298" loading="lazy">
+              <span class="spot in" style="--x:1.5;--y:77.5;--w:96;--h:10.5;--r:8px"></span>
+            </div></button>
+          </figure>
+        </div></details>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer><div class="wrap"><p>궁금한 점은 학원 상담실로 문의해 주시기 바랍니다.</p></div></footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="화면 크게 보기">
+  <div id="lb-stage"></div>
+  <button type="button" id="lb-close">닫기</button>
+</div>
+
+<script>
+(function () {
+  // 화면 크게 보기: 표시까지 그대로 복사해서 확대
+  var lb = document.getElementById('lb'), stage = document.getElementById('lb-stage');
+  document.querySelectorAll('[data-zoom]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var screen = b.querySelector('.screen').cloneNode(true);
+      var img = screen.querySelector('img');
+      var ratio = img.getAttribute('width') / img.getAttribute('height');
+      var max = b.classList.contains('pc') ? 1100 : 520;
+      var w = Math.min(window.innerWidth - 32, (window.innerHeight - 96) * ratio, max);
+      screen.style.width = w + 'px';
+      stage.innerHTML = ''; stage.appendChild(screen);
+      lb.hidden = false; document.getElementById('lb-close').focus();
+    });
+  });
+  function closeLb() { lb.hidden = true; stage.innerHTML = ''; }
+  lb.addEventListener('click', closeLb);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lb.hidden) closeLb(); });
+
+  // 따라보기 영상: 장면마다 data-dur초(설명 길이에 맞춤), 표시 등장 → 탭 → 다음 화면
+  (function () {
+    var CUE = 700;
+    var slides = document.querySelectorAll('#player .slide');
+    if (!slides.length) return;
+    var N = slides.length, LAST = N - 1;
+    var durs = Array.prototype.map.call(slides, function (s) { return (parseFloat(s.dataset.dur) || 7) * 1000; });
+    var starts = [], total = 0;
+    durs.forEach(function (d) { starts.push(total); total += d; });
+    var STEP = durs[0], TAP = STEP * 0.5;
+    var bars = document.getElementById('pbars');
+    slides.forEach(function (s, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.setAttribute('aria-label', (i + 1) + '단계로 이동');
+      b.innerHTML = '<span><i></i></span>';
+      bars.appendChild(b);
+    });
+    var fills = bars.querySelectorAll('i');
+    var bigBtn = document.getElementById('pbig'), playBtn = document.getElementById('pplay');
+    var idx = 0, t = 0, playing = false, ended = false, last = 0, tapped = false;
+
+    function fmt(ms) { var s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + ('0' + s % 60).slice(-2); }
+    function render() {
+      slides.forEach(function (s, i) {
+        s.classList.toggle('on', i === idx);
+        s.classList.toggle('cue', i === idx && (t >= CUE || !playing));
+      });
+      fills.forEach(function (f, i) { f.style.width = (i < idx ? 100 : i > idx ? 0 : Math.min(100, t / STEP * 100)) + '%'; });
+      document.getElementById('pnum').textContent = idx + 1;
+      document.getElementById('ptitle').textContent = slides[idx].dataset.title;
+      document.getElementById('pdesc').textContent = slides[idx].dataset.desc;
+      document.getElementById('ptime').textContent = (idx + 1) + ' / ' + N + '장면 · ' + fmt(starts[idx] + t) + ' / ' + fmt(total);
+      bigBtn.hidden = playing;
+      bigBtn.classList.toggle('replay', ended);
+      bigBtn.setAttribute('aria-label', ended ? '처음부터 다시 보기' : '영상 재생');
+      playBtn.textContent = playing ? '일시정지' : ended ? '다시 보기' : '재생';
+    }
+    function go(i) {
+      idx = Math.max(0, Math.min(LAST, i)); t = 0; tapped = false; ended = false;
+      STEP = durs[idx]; TAP = STEP * 0.5;
+      slides.forEach(function (s) { s.classList.remove('tapped'); });
+      render();
+    }
+    function frame(now) {
+      if (!playing) return;
+      t += now - last; last = now;
+      if (!tapped && t >= TAP) {
+        tapped = true;
+        var s = slides[idx]; s.classList.remove('tapped'); void s.offsetWidth; s.classList.add('tapped');
+      }
+      if (t >= STEP) {
+        if (idx === LAST) { t = STEP; playing = false; ended = true; render(); return; }
+        go(idx + 1);
+      }
+      render();
+      requestAnimationFrame(frame);
+    }
+    function play() {
+      if (ended) go(0);
+      playing = true; last = performance.now(); render(); requestAnimationFrame(frame);
+    }
+    function pause() { playing = false; render(); }
+    function toggle() { playing ? pause() : play(); }
+
+    bigBtn.addEventListener('click', play);
+    playBtn.addEventListener('click', toggle);
+    document.getElementById('pprev').addEventListener('click', function () { go(idx - 1); if (playing) last = performance.now(); });
+    document.getElementById('pnext').addEventListener('click', function () { go(idx + 1); if (playing) last = performance.now(); });
+    bars.querySelectorAll('button').forEach(function (b, i) {
+      b.addEventListener('click', function () { go(i); if (playing) last = performance.now(); });
+    });
+    document.addEventListener('visibilitychange', function () { if (document.hidden && playing) pause(); });
+    render();
+  })();
+
+  // 탭 (탭 묶음마다 따로 동작)
+  document.querySelectorAll('[role="tablist"]').forEach(function (list) {
+    var tabs = list.querySelectorAll('[role="tab"]');
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        tabs.forEach(function (o) {
+          var on = o === t;
+          o.setAttribute('aria-selected', on);
+          document.getElementById(o.getAttribute('aria-controls')).hidden = !on;
+        });
+      });
+    });
+  });
+
+  // 목차 링크로 접힌 섹션 열기
+  function openHash() {
+    var el = location.hash && document.getElementById(location.hash.slice(1));
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  }
+  window.addEventListener('hashchange', openHash); openHash();
+
+  // 목차·단계 링크: 고정 메뉴 높이만큼 빼고 정확한 위치로 이동
+  var navEl = document.querySelector('.nav');
+  var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href').slice(1);
+      var el = id && document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
+      if (el.tagName === 'DETAILS') el.open = true;
+      var off = (navEl ? navEl.offsetHeight : 0) + 12;
+      var top = el.getBoundingClientRect().top + window.pageYOffset - off;
+      window.scrollTo({ top: Math.max(0, top), behavior: calm ? 'auto' : 'smooth' });
+      try { history.replaceState(null, '', '#' + id); } catch (err) {}
+    });
+  });
+
+  // 현재 위치 표시 (메뉴 줄만 가로로 움직임: scrollIntoView는 폰에서 페이지 스크롤을 끊음)
+  var links = document.querySelectorAll('.nav a');
+  var secs = Array.prototype.map.call(links, function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var i = secs.indexOf(en.target);
+        links.forEach(function (a, j) { a.classList.toggle('on', i === j); });
+        var bar = links[i].parentNode, a = links[i];
+        var left = bar.scrollLeft + (a.getBoundingClientRect().left - bar.getBoundingClientRect().left) - (bar.clientWidth - a.offsetWidth) / 2;
+        bar.scrollTo({ left: Math.max(0, left), behavior: calm ? 'auto' : 'smooth' });
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    secs.forEach(function (s) { io.observe(s); });
+  }
+})();
+</script>
+
+</body>
+</html>
